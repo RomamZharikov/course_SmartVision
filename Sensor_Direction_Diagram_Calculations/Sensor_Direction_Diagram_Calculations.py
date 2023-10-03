@@ -48,9 +48,9 @@ class Calculator:
         rmbp = first_side_petal
         zero_delta = abs(teta[np.where(logG == main_petal)][0])
         half_delta = abs(teta[np.where(logG == three_decibel_value)][0])
-        dbs_per_octave = abs(third_side_petal - second_side_petal)
-        delta_theta = abs(teta[np.where(logG == third_side_petal)][0] - teta[np.where(logG == second_side_petal)][0])
-        hsbp = dbs_per_octave / delta_theta
+        dbs_per_octave = abs(first_side_petal - second_side_petal)
+        delta_theta = abs(teta[np.where(logG == first_side_petal)][0] - teta[np.where(logG == second_side_petal)][0])
+        hsbp = dbs_per_octave
         x_points = [teta[np.where(logG == first_side_petal)][0], teta[np.where(logG == second_side_petal)][0],
                     teta[np.where(logG == third_side_petal)][0]]
         y_points = [first_side_petal, second_side_petal, third_side_petal]
