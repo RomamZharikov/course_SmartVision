@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from numpy import pi, sin, arcsin, radians
+from numpy import pi, sin, arcsin, radians, degrees
 from matplotlib.pylab import figure, plot, grid
 import tkinter as tk
 
@@ -54,6 +54,19 @@ class Scanning:
     def __phi(self, degree=30):
         return 2 * pi * self.__gamma * sin(radians(degree))
 
+    # Розрахунок та побудова залежності куту напрямку променя ФАР від фази
+    def __angle_dependence_with_linear_phase_change(self):
+        phase_degree = range(-180, 180)
+        teta = np.empty(len(phase_degree), dtype=float)
+        for i in range(len(phase_degree)):
+            teta[i] = degrees(-arcsin(radians(phase_degree[i]) / (2 * pi * self.__gamma)))
+        fig1 = figure()
+        plt.axvline(x=0, color='black', linestyle='-')
+        plt.axhline(y=0, color='black', linestyle='-')
+        grid(True)
+        plot(phase_degree, teta)
+        plt.show()
+
     # Побудова графіка 3 графіків (1 без зсуву, 2 з зсувом у 30 та 40 градусів)
     def __plot_signal(self, degree1=30, degree2=40):
         D = self.__RadPattern()
@@ -101,13 +114,16 @@ class Scanning:
         button_1.grid(row=3, column=0)
         button_2 = tk.Button(text="Зависимость длинны главного лепестка от сдвига", command=self.__analysis_scan)
         button_2.grid(row=3, column=1)
+        button_3 = tk.Button(text="Зависимости угла направления луча ФАР",
+                             command=self.__angle_dependence_with_linear_phase_change)
+        button_3.grid(row=3, column=2)
         self.root.mainloop()
 
     def __update_variant(self):
         variant_value = self.__ent_variant.get()
         if variant_value:
             try:
-                self.__N = float(variant_value)
+                self.__N = int(variant_value) + 6
             except ValueError:
                 self.__ent_variant.delete(0, 'end')
                 self.__ent_variant.insert(0, "Введите число!")
