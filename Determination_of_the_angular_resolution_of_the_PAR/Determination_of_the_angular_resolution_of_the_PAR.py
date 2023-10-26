@@ -48,6 +48,14 @@ class Determination_of_the_angular_resolution_of_the_PAR:
         plt.axhline(0, color="black")
         plt.axvline(0, color="black")
         plot(teta, y_signal_normalized, color="blue")
+        teta, E, x_signal, y_signal = self.__signal(dX=40)
+        fig2 = figure()
+        plt.title(f"Відбитий сигнал при відстані dX = 40")
+        plot(teta, x_signal, color="red")
+        grid()
+        plt.axhline(0, color="black")
+        plt.axvline(0, color="black")
+        plot(teta, y_signal, color="blue")
         plt.show()
 
     def __signal(self, dX, A=20):
@@ -88,7 +96,7 @@ class Determination_of_the_angular_resolution_of_the_PAR:
                 ratio = max_avg_sig / max(y_signal)
                 if ratio >= 0.707:
                     self.__plot_results(dX, teta, max_avg_sig, x_signal, y_signal, max_avg_sig_past, x_signal_past,
-                                        y_signal_past, ratio, ratio_past)
+                                        y_signal_past)
                     break
                 else:
                     print(f"dX = {dX}, max_avg = {max_avg_sig}; max_avg / max_sign {round(ratio, 3)} <= 0.707 \n")
