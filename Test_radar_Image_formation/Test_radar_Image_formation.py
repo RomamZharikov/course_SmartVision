@@ -14,9 +14,9 @@ class Test_radar_Image_formation:
         self.__dX = load["dX"]
         self.__Npoint = load["Npoint"]
         self.__D = np.array(load["D"])
-        self.figures = ["points", "square", "several"]
+        self.__figures = ["points", "square", "several"]
 
-    def figure(self, figures="points"):
+    def figures(self, figures="points"):
         """
         Частина коду, де виконується моделювання початкового об'єкта, такого як дві точки (points), квадрат (square) або
         декількох об'єктів (several). Для перших двух елементів створили код для випадковості розташування та (для
@@ -57,7 +57,7 @@ class Test_radar_Image_formation:
         :param fig:
         :return:
         """
-        fig = self.figure(figures=fig)
+        fig = self.figures(figures=fig)
         figures = fig.copy()
         for i in range(len(figures)):
             row = figures[i]
@@ -73,7 +73,7 @@ class Test_radar_Image_formation:
         Частина коду, яка відповідає за малювання результатів
         :return:
         """
-        for i in self.figures:
+        for i in self.__figures:
             first_fig, second_fig = self.radar_return(i)
             img1 = Image.fromarray(first_fig)
             img1.show()
@@ -89,15 +89,13 @@ class Test_radar_Image_formation:
         try:
             with open("data.json", "r") as file:
                 loaded_data = json.load(file)
+                for i in loaded_data:
+                    if i["Variant"] == self.variant:
+                        return i
         except (FileNotFoundError, json.decoder.JSONDecodeError):
-            loaded_data = []
-        if len(loaded_data) > 0:
-            for i in loaded_data:
-                if i["Variant"] == self.variant:
-                    return i
-        else:
-            dX_find(variant=self.variant).find_dX()
-            return self.load_data_from_file()
+            pass
+        dX_find(variant=self.variant).find_dX()
+        return self.load_data_from_file()
 
 
 if __name__ == "__main__":
