@@ -23,7 +23,7 @@ class Simulation_of_the_radar_image_spectral_method:
 
     def generate_impulse_response(self, x):
         # Генерація імпульсної відповіді для заданого вхідного сигналу x
-        return 1 / (1 + (x / self.__a) ** (2 * self.__b))
+        return 1.0 / (1.0 + (x / self.__a) ** (2 * self.__b))
 
     def generate_ay_array(self):
         # Генерація масиву ay для обчислень
@@ -35,18 +35,25 @@ class Simulation_of_the_radar_image_spectral_method:
     def generate_image(self):
         # Генерація обробленого зображення
         ay = self.generate_ay_array()
-        signal = self.__figures
+        signal = np.asarray(self.__figures)
         target_response = np.outer(self.__ax, ay)
-
         signal_spectrum = rfft2(signal)
         target_spectrum = rfft2(target_response)
         output_spectrum = signal_spectrum * target_spectrum
         output_signal = irfft2(output_spectrum)
 
+        # Розділення та обмін половинок по горизонталі
+        half_height = output_signal.shape[0] // 2
+        top_half = output_signal[:half_height, :]
+        bottom_half = output_signal[half_height:, :]
+        swapped_image = np.concatenate((bottom_half, top_half), axis=0)
+
+        min_s = np.min(swapped_image)
+        max_s = np.max(swapped_image)
+
         # Нормалізація та конвертація відображення в зображення
-        normalized_output = (output_signal - np.min(output_signal)) * 255 / (
-                np.max(output_signal) - np.min(output_signal))
-        image = fromarray(normalized_output.astype(np.uint8))
+        normalized_output = (swapped_image - min_s) * 255 / (max_s - min_s)
+        image = fromarray(normalized_output)
         return image
 
     def plot_images(self):

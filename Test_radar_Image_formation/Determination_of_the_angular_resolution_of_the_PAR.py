@@ -24,7 +24,7 @@ class Determination_of_the_angular_resolution_of_the_PAR:
         return y
 
     def __N_DC(self):
-        t = [-90 + self.__delta * i for i in range(self.__Npoint)]
+        t = [self.__delta * i for i in range(self.__Npoint)]
         E = np.empty(self.__Npoint, dtype=float)
         for i, teta in enumerate(t):
             if teta != 0:
@@ -152,3 +152,7 @@ class Determination_of_the_angular_resolution_of_the_PAR:
                 json.dump(existing_data, file)
         else:
             print(f"Значення для варіанту {data['Variant']} вже міститься у файлі.")
+
+if __name__ == "__main__":
+    for i in range(1, 10):
+        Determination_of_the_angular_resolution_of_the_PAR(variant=i).find_dX()
